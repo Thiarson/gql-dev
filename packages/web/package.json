@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "private": true,
+  "scripts": {
+    // "dev": "bun --hot src/app.ts"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}
