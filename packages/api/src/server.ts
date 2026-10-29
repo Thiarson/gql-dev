@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { graphql } from 'graphql';
-import { schema, rootValue } from './schema';
+
+import { schema } from './schema';
 
 const app = new Hono();
 
@@ -9,7 +10,6 @@ app.post('/graphql', async (c) => {
 
   const result = await graphql({
     schema,
-    rootValue,
     source: query,
   });
 
