@@ -1,10 +1,13 @@
 import {
-  GraphQLObjectType,
+  GraphQLInt,
   GraphQLNonNull,
+  GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
-  GraphQLInt,
 } from 'graphql';
+
+import NumbersInRange from './types/numbers-in-range';
+import { numbersInRangeObject } from '../utils';
 
 import type { GraphQLFieldConfig } from 'graphql';
 
@@ -18,24 +21,20 @@ const currentTime: GraphQLFieldConfig<unknown, unknown> = {
   },
 };
 
-const sumNumbersInRange: GraphQLFieldConfig<unknown, unknown, SumArgs> = {
-  type: new GraphQLNonNull(GraphQLInt),
+const numbersInRange: GraphQLFieldConfig<unknown, unknown, SumArgs> = {
+  type: NumbersInRange,
   args: {
     begin: { type: new GraphQLNonNull(GraphQLInt) },
     end: { type: new GraphQLNonNull(GraphQLInt) },
   },
   resolve: (_source, { begin, end }) => {
-    let sum = 0;
-    for (let i = begin; i <= end; i++) {
-      sum += i;
-    }
-    return sum;
+    return numbersInRangeObject(begin, end);
   },
 };
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
-  fields: { currentTime, sumNumbersInRange },
+  fields: { currentTime, numbersInRange },
 });
 
 export const schema = new GraphQLSchema({
