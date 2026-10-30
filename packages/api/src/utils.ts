@@ -1,4 +1,8 @@
 export const numbersInRangeObject = (begin: number, end: number) => {
+  if (end < begin) {
+    throw Error(`Invalid range because ${end} < ${begin}`);
+  }
+
   let sum = 0;
   let count = 0;
   let avg = 0;
