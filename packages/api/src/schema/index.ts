@@ -1,19 +1,23 @@
 import {
   GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
+  printSchema,
 } from 'graphql';
 
-import NumbersInRange from './types/numbers-in-range';
+import Task from './types/task';
 import { numbersInRangeObject } from '../utils';
+import NumbersInRange from './types/numbers-in-range';
 
+import type { Context } from '../context';
 import type { GraphQLFieldConfig } from 'graphql';
 
 type SumArgs = { begin: number; end: number; };
 
-const currentTime: GraphQLFieldConfig<unknown, unknown> = {
+const currentTime: GraphQLFieldConfig<unknown, Context> = {
   type: GraphQLString,
   resolve: () => {
     const isoString = new Date().toISOString();
@@ -21,7 +25,7 @@ const currentTime: GraphQLFieldConfig<unknown, unknown> = {
   },
 };
 
-const numbersInRange: GraphQLFieldConfig<unknown, unknown, SumArgs> = {
+const numbersInRange: GraphQLFieldConfig<unknown, Context, SumArgs> = {
   type: NumbersInRange,
   args: {
     begin: { type: new GraphQLNonNull(GraphQLInt) },
@@ -32,11 +36,28 @@ const numbersInRange: GraphQLFieldConfig<unknown, unknown, SumArgs> = {
   },
 };
 
+const taskMainList: GraphQLFieldConfig<unknown, Context> = {
+  type: new GraphQLList(Task),
+  resolve: async (_source, _args, { pg }) => {
+    const tasks = await pg`
+      SELECT id, content, tags, approach_count, created_at
+      FROM tasks
+      WHERE is_private = ${false}
+      ORDER BY created_at DESC
+      LIMIT ${100}
+    `;
+
+    return tasks;
+  },
+}
+
 const QueryType = new GraphQLObjectType({
   name: 'Query',
-  fields: { currentTime, numbersInRange },
+  fields: { currentTime, numbersInRange, taskMainList },
 });
 
 export const schema = new GraphQLSchema({
   query: QueryType,
 });
+
+console.log(printSchema(schema));
