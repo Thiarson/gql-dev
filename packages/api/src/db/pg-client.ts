@@ -1,6 +1,6 @@
 import { SQL } from 'bun';
 
-export const pg = new SQL({
+export const sql = new SQL({
   url: process.env.DATABASE_URL!,
   max: 10,
   idleTimeout: 30,
@@ -9,6 +9,6 @@ export const pg = new SQL({
 });
 
 process.on('SIGTERM', async () => {
-  await pg.close({ timeout: 5 });
+  await sql.close({ timeout: 5 });
   process.exit(0);
 });

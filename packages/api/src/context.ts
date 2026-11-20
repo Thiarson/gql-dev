@@ -1,4 +1,4 @@
-import type { SQL } from "bun";
+import type { PgAPi } from "./db/pg-api";
 import type { MongoClient } from "mongodb";
 
-export type Context = { pg: SQL; mongo: MongoClient };
+export type Context = { pg: PgAPi; mongo: MongoClient };

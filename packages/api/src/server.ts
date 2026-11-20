@@ -1,13 +1,14 @@
 import { Hono } from 'hono';
 import { graphql } from 'graphql';
 
+import pgAPi from './db/pg-api';
 import { schema } from './schema';
-import { pg } from './db/pg-client';
 import { mongo } from './db/mongo-client';
 
 import type { Context } from './context';
 
 const app = new Hono();
+const pg = await pgAPi();
 
 app.post('/graphql', async (c) => {
   const { query } = await c.req.json<{ query: string }>();

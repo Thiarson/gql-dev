@@ -39,14 +39,7 @@ const numbersInRange: GraphQLFieldConfig<unknown, Context, SumArgs> = {
 const taskMainList: GraphQLFieldConfig<unknown, Context> = {
   type: new GraphQLList(Task),
   resolve: async (_source, _args, { pg }) => {
-    const tasks = await pg`
-      SELECT id, content, tags, approach_count, created_at
-      FROM tasks
-      WHERE is_private = ${false}
-      ORDER BY created_at DESC
-      LIMIT ${100}
-    `;
-
+    const tasks = await pg.taskMainList();
     return tasks;
   },
 }
