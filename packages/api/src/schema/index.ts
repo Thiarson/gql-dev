@@ -39,8 +39,7 @@ const numbersInRange: GraphQLFieldConfig<unknown, Context, SumArgs> = {
 const taskMainList: GraphQLFieldConfig<unknown, Context> = {
   type: new GraphQLList(Task),
   resolve: async (_source, _args, { pg }) => {
-    const tasks = await pg.taskMainList();
-    return tasks;
+    return pg.taskMainList();
   },
 }
 
