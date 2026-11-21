@@ -1,5 +1,6 @@
 import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 
+import User from './user';
 import type { Context } from '../../context';
 
 export type TaskRow = {
@@ -8,6 +9,7 @@ export type TaskRow = {
   tags: string;
   approachCount: number;
   createdAt: Date;
+  userId: string;
 }
 
 const Task = new GraphQLObjectType<TaskRow, Context>({
@@ -24,6 +26,13 @@ const Task = new GraphQLObjectType<TaskRow, Context>({
       type: new GraphQLNonNull(GraphQLString),
       resolve: (source) => source.createdAt.toISOString(),
     },
+
+    author: {
+      type: new GraphQLNonNull(User),
+      resolve: ({ userId }, _args, { pg }) => {
+        return pg.userInfo(userId);
+      }
+    }
   },
 });
 
