@@ -2,6 +2,7 @@ import { GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, 
 
 import User from './user';
 import type { Context } from '../../context';
+import Approach from './approach';
 
 export type TaskRow = {
   id: string;
@@ -32,7 +33,18 @@ const Task = new GraphQLObjectType<TaskRow, Context>({
       resolve: ({ userId }, _args, { pg }) => {
         return pg.userInfo(userId);
       }
-    }
+    },
+
+    approachList: {
+      type: new GraphQLNonNull(
+        new GraphQLList(
+          new GraphQLNonNull(Approach),
+        ),
+      ),
+      resolve: ({ id }, _args, { pg }) => {
+        return pg.approachList(id);
+      }
+    },
   },
 });
 
